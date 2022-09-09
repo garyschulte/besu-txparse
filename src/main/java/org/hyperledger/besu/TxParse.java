@@ -10,17 +10,17 @@ public class TxParse {
   public static void main(String args[]) {
     try {
       dump(Bytes.fromHexString(new String(System.in.readAllBytes()).trim()));
-    } catch(IOException ioex) {
+    } catch (IOException ioex) {
       System.err.println("IO exception.  Example usage: \n\techo \"0x02...\" | besu-txparse");
     }
   }
+
   public static void dump(Bytes tx) {
     try {
       System.out.println(
           TransactionDecoder.decodeOpaqueBytes(tx)
-              .getSender().toString()
-      );
-    } catch(Exception ex) {
+              .getSender());
+    } catch (Exception ex) {
       System.out.println("err: " + ex.getMessage());
     }
   }
