@@ -10,7 +10,7 @@ public class TxParse {
   public static void main(String args[]) {
     try {
       dump(Bytes.fromHexString(new String(System.in.readAllBytes()).trim()));
-    } catch (IOException ioex) {
+    } catch (IllegalArgumentException|IOException iex) {
       System.err.println("IO exception.  Example usage: \n\techo \"0x02...\" | besu-txparse");
     }
   }
