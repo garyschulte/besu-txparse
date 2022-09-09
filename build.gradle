@@ -18,9 +18,8 @@ sourceCompatibility = 17
 targetCompatibility = 17
 
 dependencies {
-    def besuVersion = '22.7.2'
+    def besuVersion = '+'
     implementation group:'org.hyperledger.besu.internal', name: 'core',  version:   besuVersion
-    implementation group:'org.hyperledger.besu.internal', name: 'crypto',  version:   besuVersion
     implementation group:'org.hyperledger.besu', name: 'besu-datatypes',  version:   besuVersion
     implementation group:'org.hyperledger.besu.internal', name: 'rlp',  version:   besuVersion
     implementation 'org.apache.tuweni:tuweni-rlp:2.2.0'
