@@ -1,5 +1,6 @@
 package org.hyperledger.besu;
 
+import org.hyperledger.besu.crypto.SignatureAlgorithmFactory;
 import org.hyperledger.besu.ethereum.core.encoding.TransactionDecoder;
 
 import java.io.*;
@@ -7,15 +8,18 @@ import java.math.BigInteger;
 import java.util.Scanner;
 
 import org.apache.tuweni.bytes.Bytes;
+import org.junit.Test;
 
 public class TxParse {
+
+  static final BigInteger halfCurveOrder = SignatureAlgorithmFactory.getInstance().getHalfCurveOrder();
+  static final BigInteger chainId = new BigInteger("1", 10);
+
   public static void main(String args[]) {
     doit(System.in);
   }
 
   public static void doit(InputStream src){
-    var halfCurveOrder = new BigInteger("7fffffffffffffffffffffffffffffff5d576e7357a4501ddfe92f46681b20a0", 16);
-    var chainId =  new BigInteger("1", 10);
     var sc = new Scanner(src);
     while(sc.hasNext()){
       try {
@@ -38,7 +42,8 @@ public class TxParse {
     }
   }
 
-  public static void test() {
+  @Test
+  public void test() {
     var testdata = "test\n" +
             "monkey\n" +
             "0x1\n" +
