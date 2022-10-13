@@ -3,6 +3,7 @@ package org.hyperledger.besu;
 import org.hyperledger.besu.ethereum.core.encoding.TransactionDecoder;
 
 import java.io.*;
+import java.math.BigInteger;
 import java.util.Scanner;
 
 import org.apache.tuweni.bytes.Bytes;
@@ -13,11 +14,24 @@ public class TxParse {
   }
 
   public static void doit(InputStream src){
+    var halfCurveOrder = new BigInteger("7fffffffffffffffffffffffffffffff5d576e7357a4501ddfe92f46681b20a0", 16);
+    var chainId =  new BigInteger("1", 10);
     var sc = new Scanner(src);
     while(sc.hasNext()){
       try {
         var tx = Bytes.fromHexString(sc.nextLine().trim());
-        System.out.println(TransactionDecoder.decodeOpaqueBytes(tx).getSender());
+        var transaction = TransactionDecoder.decodeOpaqueBytes(tx);
+
+        // https://github.com/hyperledger/besu/blob/5fe49c60b30fe2954c7967e8475c3b3e9afecf35/ethereum/core/src/main/java/org/hyperledger/besu/ethereum/mainnet/MainnetTransactionValidator.java#L252
+        if (transaction.getChainId().isPresent() && !transaction.getChainId().get().equals(chainId) ){
+          throw new Exception("wrong chain id");
+        }
+
+        // https://github.com/hyperledger/besu/blob/5fe49c60b30fe2954c7967e8475c3b3e9afecf35/ethereum/core/src/main/java/org/hyperledger/besu/ethereum/mainnet/MainnetTransactionValidator.java#L270
+        if (transaction.getS().compareTo(halfCurveOrder) > 0) {
+          throw new Exception("signature s out of range");
+        }
+        System.out.println(transaction.getSender());
       } catch (Exception ex) {
         System.out.println("err: " + ex.getMessage());
       }
